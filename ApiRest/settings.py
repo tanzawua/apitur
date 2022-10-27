@@ -26,6 +26,10 @@ SECRET_KEY = 'django-insecure-m3#8$k42ozsj)q6rn%pn42r*e(176t_9u^pq0hnth2*@065wvs
 DEBUG = True
 
 ALLOWED_HOSTS = []
+#configuracion de CORS 
+JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
@@ -124,3 +128,23 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+import os
+
+# Configure Django App for Heroku.
+import django_heroku
+django_heroku.settings(locals())
+
+# Update database configuration with $DATABASE_URL.
+import dj_database_url  
+db_from_env = dj_database_url.config(conn_max_age=500)  
+DATABASES['default'].update(db_from_env)
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  
+STATIC_URL = '/static/'
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (  
+    os.path.join(BASE_DIR, 'static'),
+)
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+import os
